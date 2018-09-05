@@ -44,11 +44,14 @@ repositories {
 
 dependencies {
     //compile('org.springframework.boot:spring-boot-starter')
-    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-web'){
+        exclude module:'spring-boot-starter-logging'
+    }
     compile('org.springframework.boot:spring-boot-starter-log4j2')
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     compile("org.jetbrains.kotlin:kotlin-reflect")
     compile("com.google.zxing:core:3.3.3")
     compile 'com.google.zxing:javase:3.3.3'
+    compile("com.fasterxml.jackson.module:jackson-module-kotlin")
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }

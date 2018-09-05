@@ -25,13 +25,14 @@
 
     <Loggers>
         <!-- LOG everything at INFO level -->
-        <Root level="info">
+        <Logger name="com.paic.ie.cv.qrcodedecoder" level="debug">
             <AppenderRef ref="Console" />
             <AppenderRef ref="RollingFile" />
-        </Root>
+        </Logger>
 
-        <!-- LOG "com.baeldung*" at TRACE level -->
-        <!--<Logger name="com.baeldung" level="trace"></Logger>-->
+        <Logger name="org.springframework" level="info">
+            <AppenderRef ref="RollingFile" />
+        </Logger>
     </Loggers>
 
 </Configuration>

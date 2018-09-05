@@ -8,15 +8,16 @@ import org.springframework.web.bind.annotation.RestController
 import javax.imageio.ImageIO
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource
 import com.google.zxing.common.HybridBinarizer
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 class GreetingController {
     private val logger = LoggerFactory.getLogger(GreetingController::class.java)
 
     @PostMapping("/decode")
-    fun decodeQRCode(@RequestParam(value = "image") name: ByteArray) {
+    fun decodeQRCode(@RequestParam(value = "image") name: MultipartFile): Invoice {
         logger.info("Got image.")
-        val image = ImageIO.read(name.inputStream())
+        val image = ImageIO.read(name.inputStream)
         val source = BufferedImageLuminanceSource(image)
         val bitmap = BinaryBitmap(HybridBinarizer(source))
 
@@ -24,8 +25,9 @@ class GreetingController {
                 DecodeHintType.POSSIBLE_FORMATS to listOf(BarcodeFormat.QR_CODE))
         val reader = MultiFormatReader()
         val result = reader.decode(bitmap, hints)
+        logger.debug(result.text)
         logger.info("Decoding finish.")
-        Invoice(result.text)
+        return Invoice(result.text)
     }
 
 }
