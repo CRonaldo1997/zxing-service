@@ -38,14 +38,22 @@ compileTestKotlin {
     }
 }
 
-bootJar {
-    launchScript()
+
+
+bootDistZip {
+    archiveName "${project.name}-${project.version}.zip"
+
+//    into("${project.name}-${project.version}/config") {
+//        from "${rootProject.projectDir}/src/main/resources"
+//    }
+    into("${project.name}-${project.version}") {
+        from "README.md"
+    }
 }
 
 repositories {
     mavenCentral()
 }
-
 
 dependencies {
     //compile('org.springframework.boot:spring-boot-starter')

@@ -5,4 +5,5 @@ enum class Errors(val message: String){
     NotFoundError("QRCode is not found."),
     ChecksumError("Checksum is wrong."),
     FormatError("Format is wrong."),
+    FileFormatError("File is not image.")
 }

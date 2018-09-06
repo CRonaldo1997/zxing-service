@@ -16,8 +16,17 @@ class GreetingController {
 
     @PostMapping("/decode")
     fun decodeQRCode(@RequestParam(value = "image") name: MultipartFile): Response {
+        val response = Response(Errors.OK, null)
+        val image = try {
+            ImageIO.read(name.inputStream)!!
+        } catch (e: NullPointerException){
+            logger.error(Errors.FileFormatError.message)
+            response.error = Errors.FileFormatError
+            return response
+        }
+
         logger.info("Got image.")
-        val image = ImageIO.read(name.inputStream)
+
         val source = BufferedImageLuminanceSource(image)
         val bitmap = BinaryBitmap(HybridBinarizer(source))
 
@@ -25,27 +34,27 @@ class GreetingController {
                 DecodeHintType.POSSIBLE_FORMATS to listOf(BarcodeFormat.QR_CODE))
         val reader = MultiFormatReader()
 
-        val response = Response(Errors.OK, null)
+
 
         val content: Result? = try {
-            response.errorCode = Errors.OK
+            response.error = Errors.OK
             reader.decode(bitmap, hints)
         }
         catch(e: NotFoundException){
-            response.errorCode = Errors.NotFoundError
+            response.error = Errors.NotFoundError
             null
         }
         catch(e: ChecksumException){
-            response.errorCode = Errors.ChecksumError
+            response.error = Errors.ChecksumError
             null
         }
         catch(e: FormatException){
-            response.errorCode = Errors.FormatError
+            response.error = Errors.FormatError
             null
         }
 
-        if (response.errorCode != Errors.OK) {
-            logger.error(response.errorMsg)
+        if (response.error != Errors.OK) {
+            logger.error(response.error.message)
         } else {
             logger.debug("Decoded message: ${content!!.text}")
             response.content = Info(content!!.text, content!!.resultPoints)
